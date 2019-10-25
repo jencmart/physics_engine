@@ -1,0 +1,3 @@
+/home/jencmart/personal-projects/opengl-game/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/jencmart/personal-projects/opengl-game/cmake-build-debug/CMakeFiles/opengl_game.dir
+/home/jencmart/personal-projects/opengl-game/cmake-build-debug/CMakeFiles/edit_cache.dir
