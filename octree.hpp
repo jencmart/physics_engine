@@ -555,7 +555,7 @@ public:
 
         // try to push the object up
         if(node->parent == nullptr){
-            object->outOfTheTree(); // todo - do something else when out of the tree
+            object->outOfTheTree(); // todo - do something else when out of the trees
             return;
         }
 
