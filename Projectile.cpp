@@ -24,72 +24,86 @@ Projectile::Projectile(glm::vec3 position,
     this->position = position + this->direction  * 5.0f;
 }
 
-#include <glm/gtc/quaternion.hpp>
-#include <glm/gtx/quaternion.hpp>
-
 bool Projectile::move(float deltaTime){
     if(dead)
         return false;
+    else
+        age += 1;
 
-    /// ------ UPDATE MODEL -----------------------
-    /// == create new matrices ===
+    /// --- update SCALE ---- todo (not needed so far)
+    updateScale(deltaTime);
 
-    /// --- update scale ----
-
-    /// --- update ROTATION ----
+    /// --- update ROTATION ---- (RotationMatrix && CurrentQuat) !!
     updateRotation(deltaTime);
 
-    /// ---- update position (== new position) -----
-    age += 1;
-    position += direction * deltaTime * speed;
-    Model = glm::translate( glm::mat4(1.0f), position); // move in position
+    /// ---- update TRANSLATION -----
+    updateTranslation(deltaTime);
 
-
-
-    /// --- UPDATE ALL COORDINATES -----------
-    calculateAllCoords();
+    Model = TranslationMatrix * RotationMatrix ;//* ScaleMatrix;
 
     if(age > 500 || speed < 0)
         dead = true;
 
+    /// --- UPDATE ALL COORDINATES -----------
+    calculateAllCoords();
+
     return true;
 }
 
-void Projectile::updateRotation(float deltaTime) {
-
-    // wee need old quaternion
-    glm::quat oldQuat;
-    glm::quat deltaQuat;
-
-    glm::quat newQuat = oldQuat * deltaQuat;
+void Projectile::updateRotation(float deltaTime) { // usually 0.016 sec
 
 
-
-    // RotationAngle is in radians
-    GLfloat x = RotationAxis.x * sin(RotationAngle / 2);
-    GLfloat y = RotationAxis.y * sin(RotationAngle / 2);
-    GLfloat z = RotationAxis.z * sin(RotationAngle / 2);
-    GLfloat w = cos(RotationAngle / 2);
-
-
-    // Creates an identity quaternion (no rotation)
-    glm::quat MyQuaternion;
-
-    // Direct specification of the 4 components
-// You almost never use this directly
-    MyQuaternion = quat(w,x,y,z);
-
-// Conversion from Euler angles (in radians) to Quaternion
-    glm::vec3 EulerAngles(90, 45, 0);
-    MyQuaternion = glm::quat(EulerAngles);
-
-    glm::mat4 RotationMatrix = glm::toMat4(MyQuaternion);
-
-
+    /// --- WE HAVE SOME SPEED
     GLfloat x_rot_speed = 3.0f; // 1otocka == 3s
     GLfloat y_rot_speed = 1.0f; // 1otocka == 1s
     GLfloat z_rot_speed = 5.0f; // 1otocka == 7s
 
-    GLfloat x_angle_delta = 2.0f * 3.14f * (deltaTime / x_rot_speed); // to je ale oproti minule pozici (jakoze 2Pi radianu)
+  //  updateTranslation*= 10;
 
+    /// --- WE CALCULATE THE ANGLES
+    GLfloat x_delta = 360.0f * (deltaTime / x_rot_speed); // to je ale oproti minule pozici (jakoze 2Pi radianu)
+    GLfloat y_delta = 360.0f * (deltaTime / y_rot_speed); // to je ale oproti minule pozici (jakoze 2Pi radianu)
+    GLfloat z_delta = 360.0f * (deltaTime / z_rot_speed); // to je ale oproti minule pozici (jakoze 2Pi radianu)
+
+
+    //-- rotating around centre ---
+    // if we want different origin
+    // rotated_point = origin + (orientation_quaternion * (point-origin));
+
+    /// --- WE CREATE THE ROTATION
+    // Conversion from Euler angles (in radians) to Quaternion
+    glm::vec3 EulerAngles(glm::radians(x_delta), glm::radians(y_delta), glm::radians(z_delta));
+    glm::quat  deltaQuat = glm::quat(EulerAngles);
+
+    /// -- AND MAKE FINAL QUATERNION
+
+    if(age == 1)
+        this->currentQuat = deltaQuat;
+    else
+        this->currentQuat = this->currentQuat * deltaQuat;
+
+    /// -- AND ROTATION MATRIX (does not need to be initialized
+    this->RotationMatrix = glm::toMat4(this->currentQuat);
+
+//    std::cout << "quat: " << currentQuat.x  << " " << currentQuat.y << " " << currentQuat.z << std::endl;
+
+
+//    std::cout << std::endl;
+//    for(int i = 0 ; i < 4 ; i++){
+//        for(int j=0 ; j < 4 ; j++){
+//            std::cout << RotationMatrix[i][j] << " " ;
+//        }
+//        std::cout << std::endl;
+//    }
+//    std::cout << std::endl;
+
+}
+
+void Projectile::updateScale(float deltaTime) {
+        // todo - so far we does not need it
+}
+
+void Projectile::updateTranslation(float deltaTime) {
+    position += direction * deltaTime * speed;
+    TranslationMatrix = glm::translate( glm::mat4(1.0f), position); // move in position (== move the centre of the object...)
 }

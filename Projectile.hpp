@@ -13,6 +13,11 @@
 
 // Include GLM - opengl mathematics
 #include <glm/glm.hpp>
+
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
+
 #include <vector>
 #include "object.hpp"
 
@@ -33,6 +38,10 @@ public:
     bool move(float deltaTime) override;
 
     void updateRotation(float deltaTime);
+
+    void updateScale(float deltaTime);
+
+    void updateTranslation(float time);
 };
 
 

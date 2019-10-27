@@ -5,6 +5,11 @@
 #ifndef OPENGL_GAME_OBJECT_HPP
 #define OPENGL_GAME_OBJECT_HPP
 
+#define GLM_ENABLE_EXPERIMENTAL
+
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
+
 #include "octreeNode.hpp"
 
 
@@ -18,7 +23,14 @@ public:
     std::vector<GLfloat> physicalCoords;
     std::vector<GLfloat> modelSpaceCoordsVector;
     std::vector<GLfloat> colorData;
+
+    glm::mat4 ScaleMatrix;
+    glm::quat currentQuat;
+    glm::mat4 RotationMatrix; // todo -- no init
+    glm::mat4 TranslationMatrix; // todo -- no init
     glm::mat4 Model;
+
+
     bool triangles;
     int cntElementsToDraw;
     OctreeNode * octreeNode;

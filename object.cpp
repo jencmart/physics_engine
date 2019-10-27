@@ -47,15 +47,34 @@ void Object::updateOBB(){
         return;
     }
 
-   // glm::vec4 pointCoords(obb->center_u[0], obb->center_u[1], obb->center_u[2], 1.0f);
+    /// -- TRANSLATION ( just centre ) todo - what happens when centre point is not sme as the orign of the model ?? maybe its good to use model matrix I dunno
     glm::vec4 pointCoords(obb->getObjectModel()->position_u[0], obb->getObjectModel()->position_u[1], obb->getObjectModel()->position_u[2], 1.0f);
-    glm::vec4 modelSpaceCoords = Model * pointCoords; // * initial point cords
+    glm::vec4 modelSpaceCoords = Model * pointCoords; // * initial point cords // todo -- maybe would make sense to apply only translate matrix
 
     obb->center_u[0] = modelSpaceCoords[0] ;//- obb->center_u[0];
     obb->center_u[1] = modelSpaceCoords[1] ;//- obb->center_u[1];
     obb->center_u[2] = modelSpaceCoords[2] ;//- obb->center_u[2];
 
-    // todo rotation and scale
+    /// -- ROTATION ( just rotation matrix I guess)
+    // vezmu puvodni vektory ( teda ty co byly vypocitane na zactku)
+    // a na ne aplikuji rotaci
+    glm::vec4 R(1.0f, 1.0f, 1.0f, 1.0f);
+    glm::vec4 U(1.0f, 1.0f, 1.0f, 1.0f);
+    glm::vec4 F(1.0f, 1.0f, 1.0f, 1.0f);
+    // fill it -- todo - i hope i am doing it in the right direction
+    R.x = obb->getObjectModel()->rotation_r[0][0]; U.x = obb->getObjectModel()->rotation_r[0][1]; F.x = obb->getObjectModel()->rotation_r[0][2]; // r1 u1 f1
+    R.y = obb->getObjectModel()->rotation_r[1][0]; U.y = obb->getObjectModel()->rotation_r[1][1]; F.y = obb->getObjectModel()->rotation_r[1][2]; // r2 u2 f2
+    R.z = obb->getObjectModel()->rotation_r[2][0]; U.z = obb->getObjectModel()->rotation_r[2][1]; F.z = obb->getObjectModel()->rotation_r[2][2]; // r3 u3 f3
+
+    R = RotationMatrix * R;
+    U = RotationMatrix * U;
+    F = RotationMatrix * F;
+
+    /// AND NOW Update the OBB ( DO NOT WRITE IT TO THE OBJECT MODEL :-D )
+    // ROTATION MATRIX
+    obb->rotation_r[0][0]=R.x; obb->rotation_r[0][1]=U.x; obb->rotation_r[0][2]=F.x; // r1 u1 f1
+    obb->rotation_r[1][0]=R.y; obb->rotation_r[1][1]=U.y; obb->rotation_r[1][2]=F.y; // r2 u2 f2
+    obb->rotation_r[2][0]=R.z; obb->rotation_r[2][1]=U.z; obb->rotation_r[2][2]=F.z; // r3 u3 f3
 }
 
 void Object::updateBoundingBox() {
@@ -126,7 +145,7 @@ void Object::draw(GLuint vertexBuffer, GLuint colorbuffer, glm::mat4 projectionM
 
 Object::Object(std::vector<GLfloat> physicalCoords, std::vector<GLfloat> modelColors, glm::mat4 modelMatrix, bool triangles,
 unsigned long arraySize)
-: physicalCoords(physicalCoords), colorData(modelColors), Model(modelMatrix), triangles(triangles), arraySize(arraySize){
+: currentQuat(), ScaleMatrix(), physicalCoords(physicalCoords), colorData(modelColors), Model(modelMatrix), triangles(triangles), arraySize(arraySize){
     if(triangles)
         cntElementsToDraw = (int)physicalCoords.size()/3;
     else
