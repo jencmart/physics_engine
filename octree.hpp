@@ -21,404 +21,14 @@
 #include <vector>
 #include <queue>
 #include <list>
+#include <set>
+
+#include "boundingArea.hpp"
+#include "object.hpp"
 
 #define OCT_BUILT 1
 #define OCT_NOT_BUILT 0
 
-
-
-void loadObject(GLuint vertexBuffer, GLuint colorbuffer, const GLfloat* vert , const GLfloat * colors, int size) {
-    /// -------------------- LOAD VERTICES & COLORS  OF OBJECT ------------------------------------------------ ///
-    // Make the new buffer active, creating it if necessary.
-    // Kind of like:
-    // if (opengl->buffers[buffer] == null)
-    //     opengl->buffers[buffer] = new Buffer()
-    // opengl->current_array_buffer = opengl->buffers[buffer]
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer); // --- switching context --- this cost time from what I get
-
-    // Upload a bunch of data into the active array buffer
-    // Kind of like:
-    // opengl->current_array_buffer->data = new byte[sizeof(points)]
-    // memcpy(opengl->current_array_buffer->data, points, sizeof(points))
-    glBufferData(GL_ARRAY_BUFFER, size, vert, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, colorbuffer); // activate the buffer
-    glBufferData(GL_ARRAY_BUFFER, size, colors, GL_STATIC_DRAW);
-}
-
-
-void render(GLuint vertexbuffer, GLuint colorbuffer, int fromVertex, int cntElementsToDraw, bool triangles){
-
-    GLfloat lineWidthRange[7];
-    glGetFloatv(GL_ALIASED_LINE_WIDTH_RANGE, lineWidthRange);
-
-    auto type = GL_TRIANGLES;
-    if(!triangles)
-        type = GL_LINES;
-
-    // 1rst attribute buffer : vertices
-    glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-    glVertexAttribPointer(
-            0,                  // attribute. No particular reason for 0, but must match the layout in the shader.
-            3,                  // size
-            GL_FLOAT,           // type
-            GL_FALSE,           // normalized?
-            0,                  // stride
-            (void*)0            // array buffer offset
-    );
-
-    // 2nd attribute buffer : colors
-    glEnableVertexAttribArray(1);
-    glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
-    glVertexAttribPointer(
-            1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
-            3,                                // size
-            GL_FLOAT,                         // type
-            GL_FALSE,                         // normalized?
-            0,                                // stride
-            (void*)0                          // array buffer offset
-    );
-
-    // Draw it to the back buffer !
-    glDrawArrays(type, fromVertex, cntElementsToDraw); // 12*3 ==  12 triangles  ; 12*2 == 12 lines
-
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
-}
-
-class BoundingBox{
-public:
-    std::vector<glm::vec3> corners;
-    std::vector<GLfloat> red;
-    std::vector<GLfloat> green;
-    glm::vec3 max; // horni radka
-    glm::vec3 min; // dolni radka
-
-    long unsigned arraySize = 288;
-
-    std::vector<GLfloat> getLinesList(){
-        std::vector<GLfloat> list;
-        for(int i = 0 ; i < 3; ++i){ /// A--B--C--D
-            // start edge
-            list.emplace_back(corners[i][0]);
-            list.emplace_back(corners[i][1]);
-            list.emplace_back(corners[i][2]);
-
-            // end edge
-            list.emplace_back(corners[i+1][0]);
-            list.emplace_back(corners[i+1][1]);
-            list.emplace_back(corners[i+1][2]);
-        }
-
-        /// D--A
-        // start edge
-        list.emplace_back(corners[0][0]);
-        list.emplace_back(corners[0][1]);
-        list.emplace_back(corners[0][2]);
-
-        // end edge
-        list.emplace_back(corners[3][0]);
-        list.emplace_back(corners[3][1]);
-        list.emplace_back(corners[3][2]);
-
-
-        for(int i = 4 ; i < 7; ++i){ /// E--F--G--H
-            // start edge
-            list.emplace_back(corners[i][0]);
-            list.emplace_back(corners[i][1]);
-            list.emplace_back(corners[i][2]);
-
-            // end edge
-            list.emplace_back(corners[i+1][0]);
-            list.emplace_back(corners[i+1][1]);
-            list.emplace_back(corners[i+1][2]);
-        }
-
-        /// H--E
-        // start edge
-        list.emplace_back(corners[7][0]);
-        list.emplace_back(corners[7][1]);
-        list.emplace_back(corners[7][2]);
-
-        // end edge
-        list.emplace_back(corners[4][0]);
-        list.emplace_back(corners[4][1]);
-        list.emplace_back(corners[4][2]);
-
-
-
-        for(int i = 0 ; i < 4; ++i){ /// A---E ; B---F ; C---G; D---H  // vertical lines
-            // start edge
-            list.emplace_back(corners[i][0]);
-            list.emplace_back(corners[i][1]);
-            list.emplace_back(corners[i][2]);
-
-            // end edge
-            list.emplace_back(corners[i+4][0]);
-            list.emplace_back(corners[i+4][1]);
-            list.emplace_back(corners[i+4][2]);
-        }
-        return list;
-
-    }
-
-    BoundingBox(glm::vec3 min, glm::vec3 max) : min(min), max(max), green(myObject::cubeOutlineColorGreen, myObject::cubeOutlineColorGreen + 72), red(myObject::cubeOutlineColorRed, myObject::cubeOutlineColorRed + 72) {
-
-        this->corners.emplace_back(glm::vec3(min[0], min[1], min[2])); // A
-        this->corners.emplace_back(glm::vec3(max[0], min[1], min[2])); // B
-        this->corners.emplace_back(glm::vec3(max[0], max[1], min[2])); // C
-        this->corners.emplace_back(glm::vec3(min[0], max[1], min[2])); // D
-
-        this->corners.emplace_back(glm::vec3(min[0], min[1], max[2])); // E
-        this->corners.emplace_back(glm::vec3(max[0], min[1], max[2])); // F
-        this->corners.emplace_back(glm::vec3(max[0], max[1], max[2])); // G
-        this->corners.emplace_back(glm::vec3(min[0], max[1], max[2])); // H
-    };
-
-    bool contains(const BoundingBox * x) const {
-        return x->min[0] > min[0] && x->min[1] > min[1] && x->min[2] > min[2] &&
-               x->max[0] < max[0] &&  x->max[1] < max[1] && x->max[2] < max[2];
-    }
-
-     float getWidth() const {
-        return max[1] - min[1];
-    }
-
-    glm::vec3 getCenter(){
-        return (max + min)/2.0f;
-    }
-
-    Interval * getInterval(int axis){
-        return  new Interval(this->getBoundingBox()->min[axis], this->getBoundingBox()->max[axis]);
-    }
-
-    bool intersects(const BoundingBox *other) {
-        return (this->getInterval(0)->overlaps(other->getInterval(0)) &&
-                this->getInterval(1)->overlaps(other->getInterval(1)) &&
-                this->getInterval(2)->overlaps(other->getInterval(2))
-        );
-
-
-    }
-};
-
-class Object;
-
-class OctreeNode {
-
-public:
-    BoundingBox region;
-    OctreeNode * parent;
-    std::list<Object*> objects;
-    std::vector<OctreeNode*> children; // 8 children
-
-    OctreeNode(glm::vec3 min, glm::vec3 max) : region(min, max), objects(), children(){
-        parent = nullptr;
-    };
-};
-
-
-
-class Interval{
-    float min;
-    float max;
-public:
-    Interval(float min, float max) : min(min), max(max) {};
-    bool overlaps(Interval * other){
-        if(this->min < other->min){
-            return this->max < other->min;
-        }
-        return other->max < this->min;
-    }
-};
-class Object{
-private:
-    BoundingBox * boundingBox;
-
-    glm::vec3 force;
-
-
-public:
-    std::vector<GLfloat> physicalCoords;
-    std::vector<GLfloat> modelSpaceCoordsVector;
-    std::vector<GLfloat> colorData;
-    glm::mat4 Model;
-    bool triangles;
-    int cntElementsToDraw;
-    OctreeNode * octreeNode;
-    bool outOfTree;
-
-    unsigned long arraySize;
-
-    bool collide(Object * other){
-        return this->boundingBox->intersects(other->getBoundingBox());
-
-
-    }
-
-    virtual bool move(float deltaTime){
-        return false;
-    }
-
-    void calculateRealCoords(){
-        glm::vec3 min;
-        glm::vec3 max;
-
-       // if( ! modelSpaceCoordsVector.empty())
-        modelSpaceCoordsVector.clear();
-        delete this->boundingBox; // it is ok ; we can delete nullptr
-
-        ///  Calculate actual coords - this is shit, right ?
-        for(unsigned long i = 0; i < physicalCoords.size() - 2; i = i + 3){
-
-
-
-            glm::vec4 pointCoords(physicalCoords[i], physicalCoords[i + 1], physicalCoords[i + 2], 1.0f);
-            glm::vec4 modelSpaceCoords = Model * pointCoords;
-
-            modelSpaceCoordsVector.emplace_back(modelSpaceCoords[0]);
-            modelSpaceCoordsVector.emplace_back(modelSpaceCoords[1]);
-            modelSpaceCoordsVector.emplace_back(modelSpaceCoords[2]);
-
-            if(i == 0){
-                min = glm::vec3(modelSpaceCoords[0], modelSpaceCoords[1], modelSpaceCoords[2]);
-                max = glm::vec3(modelSpaceCoords[0], modelSpaceCoords[1], modelSpaceCoords[2]);
-            }
-
-            /// MIN -- min in each direction
-            if( modelSpaceCoords[0] < min[0] )
-                min[0] = modelSpaceCoords[0];
-            if(modelSpaceCoords[1] < min[1])
-                min[1] = modelSpaceCoords[1];
-            if(modelSpaceCoords[2] < min[2])
-                min[2] = modelSpaceCoords[2];
-
-            /// MAX --- max in each direction
-            if( modelSpaceCoords[0] > max[0])
-                max[0] = modelSpaceCoords[0];
-            if(modelSpaceCoords[1] > max[1])
-                max[1] = modelSpaceCoords[1];
-            if(modelSpaceCoords[2] > max[2])
-                max[2] = modelSpaceCoords[2];
-        }
-
-        // point [A] b c d ; [E] f g h
-
-
-        boundingBox = new BoundingBox(min, max);
-
-    }
-
-    void draw(GLuint vertexBuffer, GLuint colorbuffer, glm::mat4 projectionMatrix, glm::mat4 viewMatrix, GLuint shaderProgramID, GLuint shaderMVPMatrixID){
-
-        // Load base object
-        loadObject(vertexBuffer, colorbuffer, &(this->physicalCoords[0]), &(this->colorData[0]), (int)this->arraySize);
-
-
-        // ModelViewProjection
-        glm::mat4 mvpObj =projectionMatrix * viewMatrix * this->Model;
-
-        // let OpenGL use this shader (we have usually multiple shaders)
-        glUseProgram(shaderProgramID);
-
-        // Send our transformation to the currently bound shader, in the "MVP" uniform
-        glUniformMatrix4fv(shaderMVPMatrixID, 1, GL_FALSE, &mvpObj[0][0]);
-
-        render(vertexBuffer, colorbuffer, 0, this->cntElementsToDraw, this->triangles);
-
-    }
-
-    Object(std::vector<GLfloat> physicalCoords, std::vector<GLfloat> modelColors, glm::mat4 modelMatrix, bool triangles,
-           unsigned long arraySize)
-            : physicalCoords(physicalCoords), colorData(modelColors), Model(modelMatrix), triangles(triangles), arraySize(arraySize){
-        if(triangles)
-            cntElementsToDraw = (int)physicalCoords.size()/3;
-        else
-            cntElementsToDraw = (int)physicalCoords.size()/2;
-        octreeNode = nullptr;
-        boundingBox = nullptr;
-
-        this->outOfTree = true;
-
-        calculateRealCoords();
-
-    };
-
-    const BoundingBox * getBoundingBox(){
-        return boundingBox;
-    }
-
-    void outOfTheTree() {
-        this->outOfTree = true;
-        octreeNode = nullptr;
-
-    }
-
-    void isInTree() {
-        this->outOfTree = false;
-    }
-};
-
-class Projectile : public Object{
-
-public:
-    glm::vec3 direction; // for updating model matrix
-    glm::vec3 position; // for updating model matrix
-    float speed;         // for updating model matrix
-
-    float age;
-    bool dead;
-
-    Projectile(glm::vec3 position,
-               glm::vec3 direction,
-               std::vector<GLfloat> physicalCoords,
-               std::vector<GLfloat> modelColors,
-               bool triangles,
-               unsigned long arraySize) : Object(physicalCoords, modelColors,
-                                        glm::translate(glm::mat4(1.0f), position + direction * 5.0f), triangles, arraySize) {
-
-        // for stopping criterion
-        age = 0;
-        speed = 30.0;
-        dead = false;
-
-        // save direction and position model
-        this->direction = direction;
-        this->position = position + this->direction  * 5.0f;
-    };
-
-    bool move(float deltaTime) override{
-        if(dead)
-            return false;
-
-        // Compute time difference between current and last frame
-        double currentTime = glfwGetTime();
-       // auto deltaTime = (float) (currentTime - lastTime);
-        age += 1;
-
-        position += direction * deltaTime * speed;
-        Model = glm::translate( glm::mat4(1.0f), position); // move in position
-
-
-        // todo -- update the coordinates && bounding box ?
-        calculateRealCoords();
-
-     //   lastTime = currentTime;
-        if(age < 500)
-            speed = speed - 1/speed;
-        else
-            dead = true;
-        if(speed < 0)
-            dead = true;
-
-        return true;
-    }
-
-    bool isDead(){
-        return dead;
-    }
-};
 
 
 /**
@@ -461,24 +71,8 @@ public:
         if(! node)
             return;
 
-        std::vector<GLfloat> boundingBoxLines = node->region.getLinesList(); // to zni OK
-
-        // Load base object
-        if(node->objects.empty())
-            loadObject(vertexBuffer, colorbuffer, &boundingBoxLines[0], &(node->region.green[0]) , (int)node->region.arraySize); // to zni OK
-        else
-            loadObject(vertexBuffer, colorbuffer, &boundingBoxLines[0], &(node->region.red[0]), (int)node->region.arraySize); // to zni OK
-
-
-        // MVP
-        glm::mat4 mvp = projectionMatrix * viewMatrix; // v modelu uz to jakoby mame
-
-        // load shader && bind MVP to it
-        glUseProgram(shaderProgramID);
-        glUniformMatrix4fv(shaderMVPMatrixID, 1, GL_FALSE, &mvp[0][0]);
-
-        // draw
-        render(vertexBuffer, colorbuffer, 0, 12*2, false);
+//        node->region.renderBoundingArea(vertexBuffer, colorbuffer, projectionMatrix, viewMatrix, shaderProgramID,
+//                             shaderMVPMatrixID);
 
         /// render objects inside the node
         for(auto & object : node->objects){
@@ -486,11 +80,18 @@ public:
             object->draw(vertexBuffer, colorbuffer, projectionMatrix, viewMatrix, shaderProgramID,
                          shaderMVPMatrixID);
 
+//            object->getBoundingBox()->renderBoundingArea(vertexBuffer, colorbuffer, projectionMatrix, viewMatrix, shaderProgramID,
+//                                                         shaderMVPMatrixID);
+
+
+            object->getOBB()->renderBoundingArea(vertexBuffer, colorbuffer, projectionMatrix, viewMatrix, object->Model, shaderProgramID,
+                                                   shaderMVPMatrixID);
+
         }
 
 
         for(auto & child : node->children)
-            renderTree( vertexBuffer,  colorbuffer, projectionMatrix,viewMatrix,  shaderProgramID , shaderMVPMatrixID,child);
+            renderTree(vertexBuffer,  colorbuffer, projectionMatrix,viewMatrix,  shaderProgramID , shaderMVPMatrixID,child);
     }
 
     Octree(glm::vec3 min, glm::vec3 max): min(min), max(max){
@@ -566,18 +167,18 @@ public:
     void getListOfCollisions(Object *object, OctreeNode * node, std::vector<Object*> & listCollision) {
 
         // check if it make sense to check for collisions - this never happens right now
-        if( ! node->region.contains(object->getBoundingBox()))
+        if( !node->region.intersects(object->getBoundingBox()))
             return;
 
         // check for collisions in current node
         for(auto & obj : node->objects){
-            if(object->collide(obj))
+            if(object->getOBB()->intersects(obj->getOBB())) // todo big changeeero
                 listCollision.emplace_back(obj);
         }
 
         // check where to go
         for(auto & children : node->children)
-            if(children->region.contains(object->getBoundingBox()))
+            if(children->region.intersects(object->getBoundingBox()))
                 getListOfCollisions(object, children, listCollision);
     }
 
@@ -623,14 +224,26 @@ public:
            //     std::cout << "we are about to get fucked " << std::endl;
             }
 
+         //   sleep(20);
+        }
+
+
+        for(auto & object : updated){
             /// ---- CHECK FOR COLIDING OBJECTS -------
             std::vector<Object*> collidedObj;
             this->getListOfCollisions(object, root, collidedObj);
             if(!collidedObj.empty())
-                exit(22);
+            {
+                for(auto & obj : collidedObj){
+                    obj->changeColor(0);
+                    obj->stop();
+                }
+
+
+                object->changeColor(1);
+                object->stop();
+            }
         }
-
-
     }
 
     void includeRecursive(Object* toInsert, OctreeNode * node){
@@ -678,7 +291,7 @@ public:
         glm::vec3 moveBack(0, halfWidth, 0);
         glm::vec3 moveUp(0, 0, halfWidth);
 
-        glm::vec3 cornerA = node->region.corners[0];
+        glm::vec3 cornerA = node->region.boundingBoxCornersForPrint[0];
 
 
         // we create 8 children with correct bounding boxes

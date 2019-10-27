@@ -1,5 +1,8 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/opengl_game.dir/Projectile.cpp.o"
   "CMakeFiles/opengl_game.dir/main.cpp.o"
+  "CMakeFiles/opengl_game.dir/models/Sphere.cpp.o"
+  "CMakeFiles/opengl_game.dir/object.cpp.o"
   "opengl_game"
   "opengl_game.pdb"
 )

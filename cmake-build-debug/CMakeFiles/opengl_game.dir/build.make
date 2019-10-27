@@ -70,14 +70,59 @@ CMakeFiles/opengl_game.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/opengl_game.dir/main.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jencmart/personal-projects/physics_engine/main.cpp -o CMakeFiles/opengl_game.dir/main.cpp.s
 
+CMakeFiles/opengl_game.dir/models/Sphere.cpp.o: CMakeFiles/opengl_game.dir/flags.make
+CMakeFiles/opengl_game.dir/models/Sphere.cpp.o: ../models/Sphere.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jencmart/personal-projects/physics_engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/opengl_game.dir/models/Sphere.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/opengl_game.dir/models/Sphere.cpp.o -c /home/jencmart/personal-projects/physics_engine/models/Sphere.cpp
+
+CMakeFiles/opengl_game.dir/models/Sphere.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/opengl_game.dir/models/Sphere.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jencmart/personal-projects/physics_engine/models/Sphere.cpp > CMakeFiles/opengl_game.dir/models/Sphere.cpp.i
+
+CMakeFiles/opengl_game.dir/models/Sphere.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/opengl_game.dir/models/Sphere.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jencmart/personal-projects/physics_engine/models/Sphere.cpp -o CMakeFiles/opengl_game.dir/models/Sphere.cpp.s
+
+CMakeFiles/opengl_game.dir/object.cpp.o: CMakeFiles/opengl_game.dir/flags.make
+CMakeFiles/opengl_game.dir/object.cpp.o: ../object.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jencmart/personal-projects/physics_engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/opengl_game.dir/object.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/opengl_game.dir/object.cpp.o -c /home/jencmart/personal-projects/physics_engine/object.cpp
+
+CMakeFiles/opengl_game.dir/object.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/opengl_game.dir/object.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jencmart/personal-projects/physics_engine/object.cpp > CMakeFiles/opengl_game.dir/object.cpp.i
+
+CMakeFiles/opengl_game.dir/object.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/opengl_game.dir/object.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jencmart/personal-projects/physics_engine/object.cpp -o CMakeFiles/opengl_game.dir/object.cpp.s
+
+CMakeFiles/opengl_game.dir/Projectile.cpp.o: CMakeFiles/opengl_game.dir/flags.make
+CMakeFiles/opengl_game.dir/Projectile.cpp.o: ../Projectile.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jencmart/personal-projects/physics_engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/opengl_game.dir/Projectile.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/opengl_game.dir/Projectile.cpp.o -c /home/jencmart/personal-projects/physics_engine/Projectile.cpp
+
+CMakeFiles/opengl_game.dir/Projectile.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/opengl_game.dir/Projectile.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jencmart/personal-projects/physics_engine/Projectile.cpp > CMakeFiles/opengl_game.dir/Projectile.cpp.i
+
+CMakeFiles/opengl_game.dir/Projectile.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/opengl_game.dir/Projectile.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jencmart/personal-projects/physics_engine/Projectile.cpp -o CMakeFiles/opengl_game.dir/Projectile.cpp.s
+
 # Object files for target opengl_game
 opengl_game_OBJECTS = \
-"CMakeFiles/opengl_game.dir/main.cpp.o"
+"CMakeFiles/opengl_game.dir/main.cpp.o" \
+"CMakeFiles/opengl_game.dir/models/Sphere.cpp.o" \
+"CMakeFiles/opengl_game.dir/object.cpp.o" \
+"CMakeFiles/opengl_game.dir/Projectile.cpp.o"
 
 # External object files for target opengl_game
 opengl_game_EXTERNAL_OBJECTS =
 
 opengl_game: CMakeFiles/opengl_game.dir/main.cpp.o
+opengl_game: CMakeFiles/opengl_game.dir/models/Sphere.cpp.o
+opengl_game: CMakeFiles/opengl_game.dir/object.cpp.o
+opengl_game: CMakeFiles/opengl_game.dir/Projectile.cpp.o
 opengl_game: CMakeFiles/opengl_game.dir/build.make
 opengl_game: /usr/lib/x86_64-linux-gnu/libOpenGL.so
 opengl_game: /usr/lib/x86_64-linux-gnu/libGLX.so
@@ -85,7 +130,7 @@ opengl_game: /usr/lib/x86_64-linux-gnu/libGLU.so
 opengl_game: /usr/lib/x86_64-linux-gnu/libGLEW.so
 opengl_game: /usr/lib/x86_64-linux-gnu/libglfw.so.3.2
 opengl_game: CMakeFiles/opengl_game.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/jencmart/personal-projects/physics_engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable opengl_game"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/jencmart/personal-projects/physics_engine/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable opengl_game"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/opengl_game.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

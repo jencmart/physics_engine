@@ -123,6 +123,33 @@ opengl_game/fast:
 	$(MAKE) -f CMakeFiles/opengl_game.dir/build.make CMakeFiles/opengl_game.dir/build
 .PHONY : opengl_game/fast
 
+Projectile.o: Projectile.cpp.o
+
+.PHONY : Projectile.o
+
+# target to build an object file
+Projectile.cpp.o:
+	$(MAKE) -f CMakeFiles/opengl_game.dir/build.make CMakeFiles/opengl_game.dir/Projectile.cpp.o
+.PHONY : Projectile.cpp.o
+
+Projectile.i: Projectile.cpp.i
+
+.PHONY : Projectile.i
+
+# target to preprocess a source file
+Projectile.cpp.i:
+	$(MAKE) -f CMakeFiles/opengl_game.dir/build.make CMakeFiles/opengl_game.dir/Projectile.cpp.i
+.PHONY : Projectile.cpp.i
+
+Projectile.s: Projectile.cpp.s
+
+.PHONY : Projectile.s
+
+# target to generate assembly for a file
+Projectile.cpp.s:
+	$(MAKE) -f CMakeFiles/opengl_game.dir/build.make CMakeFiles/opengl_game.dir/Projectile.cpp.s
+.PHONY : Projectile.cpp.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -150,6 +177,60 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/opengl_game.dir/build.make CMakeFiles/opengl_game.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+models/Sphere.o: models/Sphere.cpp.o
+
+.PHONY : models/Sphere.o
+
+# target to build an object file
+models/Sphere.cpp.o:
+	$(MAKE) -f CMakeFiles/opengl_game.dir/build.make CMakeFiles/opengl_game.dir/models/Sphere.cpp.o
+.PHONY : models/Sphere.cpp.o
+
+models/Sphere.i: models/Sphere.cpp.i
+
+.PHONY : models/Sphere.i
+
+# target to preprocess a source file
+models/Sphere.cpp.i:
+	$(MAKE) -f CMakeFiles/opengl_game.dir/build.make CMakeFiles/opengl_game.dir/models/Sphere.cpp.i
+.PHONY : models/Sphere.cpp.i
+
+models/Sphere.s: models/Sphere.cpp.s
+
+.PHONY : models/Sphere.s
+
+# target to generate assembly for a file
+models/Sphere.cpp.s:
+	$(MAKE) -f CMakeFiles/opengl_game.dir/build.make CMakeFiles/opengl_game.dir/models/Sphere.cpp.s
+.PHONY : models/Sphere.cpp.s
+
+object.o: object.cpp.o
+
+.PHONY : object.o
+
+# target to build an object file
+object.cpp.o:
+	$(MAKE) -f CMakeFiles/opengl_game.dir/build.make CMakeFiles/opengl_game.dir/object.cpp.o
+.PHONY : object.cpp.o
+
+object.i: object.cpp.i
+
+.PHONY : object.i
+
+# target to preprocess a source file
+object.cpp.i:
+	$(MAKE) -f CMakeFiles/opengl_game.dir/build.make CMakeFiles/opengl_game.dir/object.cpp.i
+.PHONY : object.cpp.i
+
+object.s: object.cpp.s
+
+.PHONY : object.s
+
+# target to generate assembly for a file
+object.cpp.s:
+	$(MAKE) -f CMakeFiles/opengl_game.dir/build.make CMakeFiles/opengl_game.dir/object.cpp.s
+.PHONY : object.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -159,9 +240,18 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... opengl_game"
 	@echo "... edit_cache"
+	@echo "... Projectile.o"
+	@echo "... Projectile.i"
+	@echo "... Projectile.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... models/Sphere.o"
+	@echo "... models/Sphere.i"
+	@echo "... models/Sphere.s"
+	@echo "... object.o"
+	@echo "... object.i"
+	@echo "... object.s"
 .PHONY : help
 
 

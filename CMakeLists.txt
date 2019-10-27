@@ -5,7 +5,7 @@ project(opengl_game)
 set(CMAKE_CXX_STANDARD 14)
 
 # executable file
-add_executable(opengl_game main.cpp common/shader.hpp objects.hpp common/controls.hpp octree.hpp)
+add_executable(opengl_game main.cpp common/shader.hpp models/objects.hpp common/controls.hpp octree.hpp models/Sphere.hpp models/Sphere.cpp boundingArea.hpp object.hpp object.cpp octreeNode.hpp loader.hpp Projectile.cpp Projectile.hpp)
 
 # find packages and give them some aliases
 find_package(OpenGL REQUIRED)

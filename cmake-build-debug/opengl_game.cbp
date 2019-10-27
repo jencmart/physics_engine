@@ -86,19 +86,46 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/jencmart/personal-projects/physics_engine/Projectile.cpp">
+			<Option target="opengl_game"/>
+		</Unit>
+		<Unit filename="/home/jencmart/personal-projects/physics_engine/Projectile.hpp">
+			<Option target="opengl_game"/>
+		</Unit>
+		<Unit filename="/home/jencmart/personal-projects/physics_engine/boundingArea.hpp">
+			<Option target="opengl_game"/>
+		</Unit>
 		<Unit filename="/home/jencmart/personal-projects/physics_engine/common/controls.hpp">
 			<Option target="opengl_game"/>
 		</Unit>
 		<Unit filename="/home/jencmart/personal-projects/physics_engine/common/shader.hpp">
 			<Option target="opengl_game"/>
 		</Unit>
+		<Unit filename="/home/jencmart/personal-projects/physics_engine/loader.hpp">
+			<Option target="opengl_game"/>
+		</Unit>
 		<Unit filename="/home/jencmart/personal-projects/physics_engine/main.cpp">
 			<Option target="opengl_game"/>
 		</Unit>
-		<Unit filename="/home/jencmart/personal-projects/physics_engine/objects.hpp">
+		<Unit filename="/home/jencmart/personal-projects/physics_engine/models/Sphere.cpp">
+			<Option target="opengl_game"/>
+		</Unit>
+		<Unit filename="/home/jencmart/personal-projects/physics_engine/models/Sphere.hpp">
+			<Option target="opengl_game"/>
+		</Unit>
+		<Unit filename="/home/jencmart/personal-projects/physics_engine/models/objects.hpp">
+			<Option target="opengl_game"/>
+		</Unit>
+		<Unit filename="/home/jencmart/personal-projects/physics_engine/object.cpp">
+			<Option target="opengl_game"/>
+		</Unit>
+		<Unit filename="/home/jencmart/personal-projects/physics_engine/object.hpp">
 			<Option target="opengl_game"/>
 		</Unit>
 		<Unit filename="/home/jencmart/personal-projects/physics_engine/octree.hpp">
+			<Option target="opengl_game"/>
+		</Unit>
+		<Unit filename="/home/jencmart/personal-projects/physics_engine/octreeNode.hpp">
 			<Option target="opengl_game"/>
 		</Unit>
 		<Unit filename="/home/jencmart/personal-projects/physics_engine/CMakeLists.txt">

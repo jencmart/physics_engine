@@ -18,13 +18,12 @@
 
 
 #include "common/shader.hpp"
-#include "objects.hpp"
 #include "common/controls.hpp"
+#include "models/objects.hpp"
 #include "octree.hpp"
+#include "Projectile.hpp"
 
 #define dim(x) (sizeof(x) / sizeof((x)[0]))
-
-
 
 using namespace glm;
 
@@ -86,7 +85,6 @@ public:
 
         // For the next frame, the "last time" will be "now"
         lastTime = currentTime;
-
         return deltaTime;
     }
 
@@ -94,6 +92,10 @@ public:
         lastTime = glfwGetTime();
     }
 };
+
+#include "models/Sphere.hpp"
+
+
 class MainLoop{
 
 public:
@@ -146,7 +148,7 @@ public:
 
         /// -------------------- INIT VERTEX ARRAY --------------------------------------------------------- ///
         GLuint VertexArrayID;       // ID for VAO (vertex array object)
-        glGenVertexArrays(1, &VertexArrayID); // create it && save ID // e.g. VertexArrayID = 1 (can be 2, 3 ...)
+        glGenVertexArrays(1, &VertexArrayID); // create it && save ID // extent_e.g. VertexArrayID = 1 (can be 2, 3 ...)
         glBindVertexArray(VertexArrayID);  //  Make the new array active, creating it if necessary.
 
 
@@ -170,7 +172,7 @@ public:
 
         /// ------------------ CREATE STATIC ELEMENTS ----------------------------------------------------------  ///
         // Create STATIC elements
-        for(int i = 1 ; i <= 2; i++) {
+        for(int i = 1 ; i < 1; i++) {
 
             int x = rand() % 45 + 1;  // [1,45]
             int y = rand() % 45 + 1;  // [1,45]
@@ -190,7 +192,7 @@ public:
             std::vector<GLfloat> loadedModel(myObject::cube, myObject::cube + 36 * 3);
 
             // now should be good
-            std::vector<GLfloat> loadedColors(myObject::cubeColor, myObject::cubeColor + 36 * 3);
+            std::vector<GLfloat> loadedColors(myObject::cubeColor, myObject::cubeColor + 36 * 3); // 6 bodu na strane , 6 stran , 3 sour
 
             // create new Object
             auto * object = new Object(loadedModel, loadedColors, M, true, sizeof(myObject::cubeColor));
@@ -247,7 +249,7 @@ public:
             // Clear the screen (also dept buffer [Z] )
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 //
-//
+
 //
 //            //// ---- draw static objects
 //            plane->draw(vertexBuffer, colorbuffer, controls->getProjectionMatrix(), controls->getViewMatrix(),
