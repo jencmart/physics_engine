@@ -18,9 +18,10 @@ Projectile::Projectile(glm::vec3 position,
     age = 0;
     speed = 30.0;
     dead = false;
+    fixed = false;
 
     // save direction and position model
-    this->direction = direction;
+    this->direction = glm::normalize(direction);
     this->position = position + this->direction  * 5.0f;
 }
 
@@ -41,7 +42,7 @@ bool Projectile::move(float deltaTime){
 
     Model = TranslationMatrix * RotationMatrix ;//* ScaleMatrix;
 
-    if(age > 500 || speed < 0)
+    if( speed < 0) // age > 500 ||
         dead = true;
 
     /// --- UPDATE ALL COORDINATES -----------

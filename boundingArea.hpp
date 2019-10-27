@@ -46,12 +46,11 @@ public:
 
         std::vector<GLfloat> boundingBoxLines = this->getLinesList(); // to zni OK
 
-        bool renderBB = false;
+       // bool renderBB = false;
 
-        if(renderBB){
+     //   if(renderBB){
             Loader::loadObject(vertexBuffer, colorbuffer, &boundingBoxLines[0], &(red[0]), (int)arraySize); // to zni OK
-        }
-
+    //    }
 
         // MVP
         glm::mat4 mvp = projectionMatrix * viewMatrix; // v modelu uz to jakoby mame
@@ -511,8 +510,8 @@ public:
         if (fabs(t[1] * R(0,2) - t[0] * R(1,2)) > ra + rb) return false;
 
         // Since no separating axis is found, the OBBs must be intersecting
-        std::cout << center_u.x << " " << center_u.y << " " <<  center_u.z << std::endl;
-        std::cout << b->center_u.x << " " << b->center_u.y << " " <<  b->center_u.z << std::endl << std::endl;
+//        std::cout << center_u.x << " " << center_u.y << " " <<  center_u.z << std::endl;
+//        std::cout << b->center_u.x << " " << b->center_u.y << " " <<  b->center_u.z << std::endl << std::endl;
         return true;
     }
 

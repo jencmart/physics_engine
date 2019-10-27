@@ -20,6 +20,20 @@ protected:
     glm::vec3 force;
 
 public:
+    // for projectile
+    glm::vec3 direction; // for updating model matrix
+    glm::vec3 position; // for updating model matrix
+    float speed;         // for updating model matrix
+    float age;
+    bool fixed;
+    int colorR;
+    int colorG;
+    int colorB;
+
+
+    // for collision resolution
+    std::vector<Object *> allreadyCollided;
+
     std::vector<GLfloat> physicalCoords;
     std::vector<GLfloat> modelSpaceCoordsVector;
     std::vector<GLfloat> colorData;
@@ -40,7 +54,7 @@ public:
 
     /// ------- FUNCTIONS -------------------------
     void stop();
-    void changeColor(int colorID);
+    void changeColor(GLfloat r, GLfloat g, GLfloat b);
     virtual bool move(float deltaTime);
     void updateOBB();
     void updateBoundingBox() ;
@@ -51,5 +65,7 @@ public:
     OBB * getOBB();
     void outOfTheTree();
     void isInTree();
+    void collisionResolution(Object * secondObject);
+
 };
 #endif //OPENGL_GAME_OBJECT_HPP

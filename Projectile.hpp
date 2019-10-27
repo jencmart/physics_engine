@@ -24,10 +24,6 @@
 class Projectile : public Object{
 
 public:
-    glm::vec3 direction; // for updating model matrix
-    glm::vec3 position; // for updating model matrix
-    float speed;         // for updating model matrix
-    float age;
 
     Projectile(glm::vec3 position,
                glm::vec3 direction,

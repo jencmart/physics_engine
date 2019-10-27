@@ -15,12 +15,16 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Projectile.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Projectile.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Projectile.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/Projectile.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boundingArea.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/boundingArea.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/opengl_game.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/opengl_game.dir/CXX.includecache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/opengl_game.dir/Projectile.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/opengl_game.dir/Projectile.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/opengl_game.dir/main.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/opengl_game.dir/main.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/opengl_game.dir/object.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/opengl_game.dir/object.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/opengl_game" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/opengl_game" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/object.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/object.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/object.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/object.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/octree.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/octree.hpp" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -109,7 +113,7 @@
       <workItem from="1572077065561" duration="24162000" />
       <workItem from="1572163172731" duration="26000" />
       <workItem from="1572163217361" duration="11897000" />
-      <workItem from="1572180187549" duration="7722000" />
+      <workItem from="1572180187549" duration="28639000" />
     </task>
     <servers />
   </component>

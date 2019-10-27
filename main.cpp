@@ -172,7 +172,7 @@ public:
 
         /// ------------------ CREATE STATIC ELEMENTS ----------------------------------------------------------  ///
         // Create STATIC elements
-        for(int i = 1 ; i < 1; i++) {
+        for(int i = 1 ; i < 0; i++) {
 
             int x = rand() % 45 + 1;  // [1,45]
             int y = rand() % 45 + 1;  // [1,45]
@@ -200,7 +200,7 @@ public:
         }
 
         //// ----- BUID THE OCTREE ----- ///
-        float min = -400;
+        float min = -100;
 
         octree = new Octree(glm::vec3(min, min, min), glm::vec3(-min, -min, -min));
         for(auto & object : staticObjects){

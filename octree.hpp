@@ -71,8 +71,8 @@ public:
         if(! node)
             return;
 
-//        node->region.renderBoundingArea(vertexBuffer, colorbuffer, projectionMatrix, viewMatrix, shaderProgramID,
-//                             shaderMVPMatrixID);
+   //     if(node == root)
+//           node->region.renderBoundingArea(vertexBuffer, colorbuffer, projectionMatrix, viewMatrix, shaderProgramID,shaderMVPMatrixID);
 
         /// render objects inside the node
         for(auto & object : node->objects){
@@ -80,9 +80,7 @@ public:
             object->draw(vertexBuffer, colorbuffer, projectionMatrix, viewMatrix, shaderProgramID,
                          shaderMVPMatrixID);
 
-//            object->getBoundingBox()->renderBoundingArea(vertexBuffer, colorbuffer, projectionMatrix, viewMatrix, shaderProgramID,
-//                                                         shaderMVPMatrixID);
-
+          //  object->getBoundingBox()->renderBoundingArea(vertexBuffer, colorbuffer, projectionMatrix, viewMatrix, shaderProgramID, shaderMVPMatrixID);
 
             object->getOBB()->renderBoundingArea(vertexBuffer, colorbuffer, projectionMatrix, viewMatrix, object->Model, shaderProgramID,
                                                    shaderMVPMatrixID);
@@ -109,7 +107,6 @@ public:
         if(root == nullptr){
             root = new OctreeNode(min, max);
             root->objects = std::move(queue);
-//            std::cout << root->objects.size() << std::endl;
             this->buildRecursive(root);
             state = OCT_BUILT;
             return;
@@ -156,7 +153,11 @@ public:
 
         // try to push the object up
         if(node->parent == nullptr){
-            object->outOfTheTree(); // todo - do something else when out of the trees
+            object->direction = -1.0f * object->direction;
+            node->objects.emplace_back(object);
+            object->octreeNode = node; // safe fallback
+            buildRecursive(node);
+         //   object->outOfTheTree(); // todo - do something else when out of the trees -- right now we just reverse direction -- todo --- do the colision resolution also !!!!
             return;
         }
 
@@ -183,7 +184,12 @@ public:
     }
 
     void updateObjects(std::vector<Object*> updated) {
+
+
         for(auto & object : updated){
+            /// clear this because later we will deal with new collisions
+            object->allreadyCollided.clear();
+
             OctreeNode * node = object->octreeNode;
 
             if(node == nullptr){
@@ -197,7 +203,6 @@ public:
                     continue; // todo - that means that we do not explicitly informs that object is out of the tree and we are only waiting if it will return sometime ... AND WE DO NOT DELETE THE OBJECT !!!!!!! that is bullshit
                 }
             }
-//            std::cout << node->objects.size() << "  ";
 
             for (auto i = node->objects.begin(); i != node->objects.end();) {
                 if ( *i == object){
@@ -211,8 +216,6 @@ public:
 
             object->octreeNode = nullptr;
 
-//            std::cout << node->objects.size() << std::endl;
-
             // we can only go down
             if(node->region.contains(object->getBoundingBox())) {
                 this->includeRecursive(object, node);
@@ -221,27 +224,29 @@ public:
             else {
                this->bubbleUp(node, object);
              //   this->includeRecursive(object, root);
-           //     std::cout << "we are about to get fucked " << std::endl;
             }
-
-         //   sleep(20);
         }
 
-
+        /// ---- CHECK FOR COLIDING OBJECTS -------
         for(auto & object : updated){
-            /// ---- CHECK FOR COLIDING OBJECTS -------
             std::vector<Object*> collidedObj;
             this->getListOfCollisions(object, root, collidedObj);
             if(!collidedObj.empty())
             {
                 for(auto & obj : collidedObj){
-                    obj->changeColor(0);
-                    obj->stop();
+                    if( ! obj->fixed){
+                        obj->changeColor(obj->colorR/10.0f, obj->colorG/10.0f, obj->colorB/10.0f);
+                        obj->colorR = (obj->colorR+(rand() % 10 + 1))%10;
+                        obj->colorG = (obj->colorG+(rand() % 10 + 1))%10;
+                        obj->colorB = (obj->colorB+(rand() % 10 + 1))%10;
+                    }
+
+                    object->collisionResolution(obj);
                 }
-
-
-                object->changeColor(1);
-                object->stop();
+                object->changeColor(object->colorR/10.0f, object->colorG/10.0f, object->colorB/10.0f);
+                object->colorR = (object->colorR+(rand() % 10 + 1))%10;
+                object->colorG = (object->colorG+(rand() % 10 + 1))%10;
+                object->colorB = (object->colorB+(rand() % 10 + 1))%10;
             }
         }
     }

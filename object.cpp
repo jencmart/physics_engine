@@ -15,6 +15,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
 #include <list>
+#include <zconf.h>
 
 //#include "boundingArea.hpp"
 #include "object.hpp"
@@ -23,17 +24,13 @@ void Object::stop(){
      dead = true;
 }
 
-void Object::changeColor(int colorID){
+void Object::changeColor(GLfloat r, GLfloat g, GLfloat b){
 
-    colorID += 1;
-    for(int  i = 0; i < (int)colorData.size() ; ++i){
-        GLfloat one = 1.0f;
-        GLfloat  zero = 0.0f;
+    for(int  i = 0; i < (int)colorData.size() - 2; i += 3){
 
-        if(i%colorID == 0){
-            colorData[i] = one;
-        } else
-            colorData[i] = zero;
+        colorData[i] = r;
+        colorData[i+1] = g;
+        colorData[i+1] = b;
     }
 }
 
@@ -145,7 +142,7 @@ void Object::draw(GLuint vertexBuffer, GLuint colorbuffer, glm::mat4 projectionM
 
 Object::Object(std::vector<GLfloat> physicalCoords, std::vector<GLfloat> modelColors, glm::mat4 modelMatrix, bool triangles,
 unsigned long arraySize)
-: currentQuat(), ScaleMatrix(), physicalCoords(physicalCoords), colorData(modelColors), Model(modelMatrix), triangles(triangles), arraySize(arraySize){
+: currentQuat(), ScaleMatrix(), allreadyCollided(), physicalCoords(physicalCoords), colorData(modelColors), Model(modelMatrix), triangles(triangles), arraySize(arraySize){
     if(triangles)
         cntElementsToDraw = (int)physicalCoords.size()/3;
     else
@@ -153,8 +150,12 @@ unsigned long arraySize)
     octreeNode = nullptr;
     boundingBox = nullptr;
     obb = nullptr;
-
+    dead = true;
+    fixed = true;
     this->outOfTree = true;
+    colorR = rand() % 10 + 1;  /* generate secret number between 1 and 10: */
+    colorG = rand() % 10 + 1;  /* generate secret number between 1 and 10: */
+    colorB = rand() % 10 + 1;  /* generate secret number between 1 and 10: */
 
     calculateAllCoords();
 
@@ -176,4 +177,77 @@ void Object::outOfTheTree() {
 
 void Object::isInTree() {
     this->outOfTree = false;
+}
+
+void Object::collisionResolution(Object *secondObject) {
+    // me with one or more others
+
+    if(this->fixed) // treat it from the secondObject side
+        return;
+
+
+    // what about solution to the "I treat him, he treats me" ????
+    // In one collision pass we only treat two objects one time
+    // that means ==> have here list of objects with which you already collided
+    // if it is there, skip it ( because you have allready been treated)
+
+    // I treat myself and you ; I do not want to you treat me  (and yourself)
+    for( auto & obj : secondObject->allreadyCollided){ // i am at his list, means it allready have been done
+        if(obj == this)
+            return;
+    }
+    // otherwise add it to my list
+    this->allreadyCollided.emplace_back(secondObject);
+
+    /// ---- 1) work out the direction of the collision. e.g. for a circle/ball hitting a line/surface without friction it will be the perpendicular/normal direction.
+
+    if(secondObject->fixed || secondObject->dead){
+        /// todo - dirty fix
+        // find the norm
+        glm::vec3 norm = glm::normalize( glm::vec3(0,1,0));
+
+        // use this equation
+        glm::vec3 reflection(direction -  2*glm::dot(direction,norm)*norm);
+        this->direction = glm::normalize(reflection);
+    }
+
+    else{
+
+        // find the norm
+
+        // A --> B vector
+        glm::vec3 vecX = secondObject->getOBB()->center_u - this->getOBB()->center_u; // A->B vector
+        vecX = glm::normalize(vecX);
+
+        // SPHERE A (this)
+        GLfloat x1 = glm::dot(vecX, direction * speed);
+        glm::vec3 vec_v1_x = vecX * x1; // one direction
+        glm::vec3 vec_v1_y = (direction * speed) - vec_v1_x; // second direction
+
+        // SPHERE B (other)
+        vecX = -1.0f * vecX;
+        GLfloat x2 = glm::dot(vecX, secondObject->direction * secondObject->speed);
+        glm::vec3 vec_v2_x = vecX*x2; // one direction
+        glm::vec3 vec_v2_y = (secondObject->direction * secondObject->speed) - vec_v2_x; // second direction
+
+        GLfloat m1, m2; // masses
+        m1 = 1.0f;
+        m2 = 1.0f;
+
+        glm::vec3 thisVelocity = vec_v1_x * (m1-m2) / (m1+m2) + vec_v2_x*(2*m2)/(m1+m2) + vec_v1_y;
+        glm::vec3 otherVelocity = vec_v1_x*(2*m1)/(m1+m2) + vec_v2_x*(m2-m1)/(m1+m2) + vec_v2_y;
+
+        this->speed = (float)sqrt(glm::dot(thisVelocity, thisVelocity));
+        this->direction = glm::normalize(thisVelocity);
+
+        secondObject->speed = (float)sqrt(glm::dot(otherVelocity, otherVelocity));
+        secondObject->direction = glm::normalize(otherVelocity);
+    }
+
+    /// ---- 2) work out the impact speed, the speed in the direction of the collision, i.e. the speed towards the line/surface.
+
+    /// ---- 3) work out the impulse. If there''s no rotation it will be simply between 1 and 2 times the impact speed, with 1 being no bounce and 2 being maximum bounce. It is in the direction as the normal/perpendicular, away from the edge/surface.
+
+    ///  ---- 4) Add it to the object velocity to get the velocity after the collision.
+
 }
